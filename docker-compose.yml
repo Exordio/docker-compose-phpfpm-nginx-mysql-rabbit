@@ -46,19 +46,19 @@ services:
       - 5672:5672
       - 15672:15672
 
-  composer:
-    build:
-      context: ./images/php
-      dockerfile: ./Dockerfile
-    working_dir: /var/www
-#    entrypoint: php index.php
-    depends_on:
-      - mysql
-    links:
-      - mysql
-
-    volumes:
-      - ./www:/var/www:z
-
-    tty: true
-    stdin_open: true
+#  composer:
+#    build:
+#      context: ./images/php
+#      dockerfile: ./Dockerfile
+#    working_dir: /var/www
+##    entrypoint: php index.php
+#    depends_on:
+#      - mysql
+#    links:
+#      - mysql
+#
+#    volumes:
+#      - ./www:/var/www:z
+#
+#    tty: true
+#    stdin_open: true
