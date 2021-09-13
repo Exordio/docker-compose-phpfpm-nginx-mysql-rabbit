@@ -11,6 +11,7 @@ services:
       - ./logs/nginx:/var/log/nginx:z
     links:
       - php
+      - mysql
   php:
     build: ./images/php
     links:
@@ -30,6 +31,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: sait
+      DB_PATH_HOST: /etc/mysql
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
