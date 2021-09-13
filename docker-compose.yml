@@ -51,7 +51,7 @@ services:
       context: ./images/php
       dockerfile: ./Dockerfile
     working_dir: /var/www
-    entrypoint: php index.php
+#    entrypoint: php index.php
     depends_on:
       - mysql
     links:
