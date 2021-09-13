@@ -1,0 +1,64 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./hosts:/etc/nginx/conf.d:z
+      - ./www:/var/www:z
+      - ./logs/nginx:/var/log/nginx:z
+    links:
+      - php
+  php:
+    build: ./images/php
+    links:
+      - mysql
+    volumes:
+      - ./www:/var/www:z
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - /etc/mysql:/etc/mysql:z
+      - ./logs/mysql:/var/log/mysql:z
+      - ./mysql:/var/lib/mysql:z
+      - ./mysql-files:/var/lib/mysql-files:z
+      - ./data/mysql:/docker-entrypoint-initdb.d:z
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: sait
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    restart: always
+    volumes:
+      - ./rabbit/etc:/etc/rabbitmq:z
+      - ./rabbit/data:/var/lib/rabbitmq:z
+      - ./rabbit/logs:/var/log/rabbitmq:z
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'SETCOOKIESETCOOKIEDS'
+      RABBITMQ_DEFAULT_USER: 'admin'
+      RABBITMQ_DEFAULT_PASS: 'pzc'
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  composer:
+    build:
+      context: ./images/php
+      dockerfile: ./Dockerfile
+    working_dir: /var/www
+    entrypoint: php index.php
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+    volumes:
+      - ./www:/var/www:z
+
+    tty: true
+    stdin_open: true
